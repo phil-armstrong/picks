@@ -1,7 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val kotlin_version: String by extra
 buildscript {
-	repositories {
+	var kotlin_version: String by extra
+    kotlin_version = "1.1.51"
+    repositories {
 		mavenCentral()
 		maven("https://repo.spring.io/milestone")
 	}
@@ -9,12 +12,14 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.M5")
 		classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.1")
-	}
+        classpath(kotlinModule("gradle-plugin", kotlin_version))
+    }
 }
 
 apply {
 	plugin("org.springframework.boot")
 	plugin("org.junit.platform.gradle.plugin")
+    plugin("kotlin")
 }
 
 plugins {
@@ -52,5 +57,13 @@ dependencies {
 	}
 	testCompile("org.junit.jupiter:junit-jupiter-api")
 	testRuntime("org.junit.jupiter:junit-jupiter-engine")
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
 }
 
